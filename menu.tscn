@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://yemxxv4tje3n"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_gbrsu"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vgyk3"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="Menu" type="Node3D"]
+
+[node name="XROrigin3D" type="XROrigin3D" parent="."]
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
+
+[node name="XRController3D" type="XRController3D" parent="XROrigin3D"]
+tracker = &"left_hand"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="XROrigin3D/XRController3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.20229, 0, 0)
+mesh = SubResource("BoxMesh_gbrsu")
+skeleton = NodePath("../../XRCamera3D")
+
+[node name="XRController3D2" type="XRController3D" parent="XROrigin3D"]
+tracker = &"left_hand"
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="XROrigin3D/XRController3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.80976, 0, 0)
+mesh = SubResource("BoxMesh_vgyk3")
+skeleton = NodePath("../../..")
