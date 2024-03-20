@@ -1,29 +1,82 @@
-[gd_scene load_steps=3 format=3 uid="uid://yemxxv4tje3n"]
+[gd_scene load_steps=13 format=3 uid="uid://yemxxv4tje3n"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_gbrsu"]
-size = Vector3(0.1, 0.1, 0.1)
+[ext_resource type="Script" path="res://menu.gd" id="1_juadi"]
+[ext_resource type="PackedScene" uid="uid://cqtydmwchs1b4" path="res://building2.glb" id="2_7vmg0"]
+[ext_resource type="PackedScene" path="res://addons/godot-xr-tools/misc/vr_common_shader_cache.tscn" id="2_oputs"]
+[ext_resource type="PackedScene" uid="uid://njx823gyk04n" path="res://addons/godot-xr-tools/hands/scenes/highpoly/left_hand.tscn" id="3_05w0i"]
+[ext_resource type="PackedScene" uid="uid://raeeicvvindd" path="res://addons/godot-xr-tools/hands/scenes/highpoly/right_hand.tscn" id="4_4pwll"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_vgyk3"]
-size = Vector3(0.1, 0.1, 0.1)
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_a4c58"]
+rayleigh_coefficient = 7.39
+mie_coefficient = 0.054
+
+[sub_resource type="Sky" id="Sky_4lwrd"]
+sky_material = SubResource("PhysicalSkyMaterial_a4c58")
+
+[sub_resource type="Environment" id="Environment_52m85"]
+background_mode = 2
+sky = SubResource("Sky_4lwrd")
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0
+
+[sub_resource type="FogMaterial" id="FogMaterial_l87fc"]
+density = 3.0935
+albedo = Color(0.627451, 0.74902, 1, 1)
+emission = Color(0.698039, 0.796078, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ch56m"]
+seed = 205
+frequency = 0.0385
+
+[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_tlpjf"]
+noise = SubResource("FastNoiseLite_ch56m")
+
+[sub_resource type="FogMaterial" id="FogMaterial_h3apm"]
+density = 3.865
+albedo = Color(0, 0, 0, 1)
+height_falloff = 0.137773
+edge_fade = 0.459479
+density_texture = SubResource("NoiseTexture3D_tlpjf")
 
 [node name="Menu" type="Node3D"]
+script = ExtResource("1_juadi")
 
 [node name="XROrigin3D" type="XROrigin3D" parent="."]
 
 [node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
 
+[node name="VRCommonShaderCache" parent="XROrigin3D/XRCamera3D" instance=ExtResource("2_oputs")]
+
 [node name="XRController3D" type="XRController3D" parent="XROrigin3D"]
 tracker = &"left_hand"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="XROrigin3D/XRController3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.20229, 0, 0)
-mesh = SubResource("BoxMesh_gbrsu")
-skeleton = NodePath("../../XRCamera3D")
+[node name="LeftHand" parent="XROrigin3D/XRController3D" instance=ExtResource("3_05w0i")]
 
 [node name="XRController3D2" type="XRController3D" parent="XROrigin3D"]
-tracker = &"left_hand"
+tracker = &"right_hand"
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="XROrigin3D/XRController3D2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.80976, 0, 0)
-mesh = SubResource("BoxMesh_vgyk3")
-skeleton = NodePath("../../..")
+[node name="RightHand" parent="XROrigin3D/XRController3D2" instance=ExtResource("4_4pwll")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_52m85")
+
+[node name="FogVolume" type="FogVolume" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.00129, -19.3208, -0.447783)
+size = Vector3(150.448, 2, 165.653)
+material = SubResource("FogMaterial_l87fc")
+
+[node name="building2" parent="." instance=ExtResource("2_7vmg0")]
+transform = Transform3D(1.585, 0, 0, 0, 1.585, 0, 0, 0, 1.585, 0.344419, -2.80302, 0.14365)
+
+[node name="Cube" parent="building2" index="0"]
+transform = Transform3D(6.69, 0, 0, 0, 6.69, 0, 0, 0, 6.69, -0.960097, -19.9231, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.768775, 0.63952, 0, -0.63952, 0.768775, 0, 4.0811, 6.3734)
+
+[node name="FogVolume" type="FogVolume" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.00129, 0.381012, -0.447783)
+size = Vector3(4.32466, 8.60806, 3.395)
+material = SubResource("FogMaterial_h3apm")
+
+[editable path="building2"]
